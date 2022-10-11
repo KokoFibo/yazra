@@ -50,7 +50,7 @@ class pegawaiAjaxController extends Controller
                 'email' => $request->email,
             ];
             Pegawai::create($data);
-            return response()->json(['success' => "Data berhasil di simpan"]);
+            return response()->json(['success' => "Data berhasil di simpan lho"]);
         }
     }
 
