@@ -5,10 +5,7 @@
             serverSide: true,
             ajax: "{{ url('pegawaiAjax') }}",
             columns: [{
-                    // data: 'DT_RowIndex',
-                    // name: 'DT_RowIndex',
-                    // orderable: false,
-                    // searchable: false
+
                     data: 'id',
                     name: 'Id',
                     // orderable: false,
@@ -43,7 +40,6 @@
             $('#exampleModal').modal('show');
 
             $('.tombol-simpan').click(function() {
-
                 simpan();
             });
         })
@@ -51,6 +47,7 @@
         // function Simpan
 
         function simpan(id = '') {
+
             if (id == '') {
                 var var_url = 'pegawaiAjax';
                 var var_type = 'POST';
@@ -65,9 +62,11 @@
                     nama: $('#nama').val(),
                     email: $('#email').val(),
                 },
+
+
                 success: function(response) {
                     if (response.errors) {
-                        console.log(response.errors);
+                        alert('error :' + email)
                         $('.alert-danger').removeClass('d-none');
                         $('.alert-danger').html('<ul>');
 
@@ -79,10 +78,16 @@
                         $('.alert-danger').append("</ul>");
 
                     } else {
-                        $('.alert-success').removeClass('d-none');
-                        $('.alert-success').html(response.success);
 
-
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'success',
+                            title: 'Your work has been saved',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+                        clearData();
+                        $('.btn-close').click();
                     }
                     $('#myTable').DataTable().ajax.reload();
                 }
@@ -96,7 +101,7 @@
                 url: 'pegawaiAjax/' + id + '/edit',
                 type: 'get',
                 success: function(response) {
-                    console.log(response.result);
+                    // console.log(response.result);
                     $('#exampleModal').modal('show');
                     $('#nama').val(response.result.nama);
                     $('#email').val(response.result.email);
@@ -109,14 +114,30 @@
 
         //Proses Delete
         $('body').on('click', '.tombol-del', function(e) {
-            if (confirm('Yakin mau hapus data ini?') == true) {
-                let id = $(this).data('id');
-                $.ajax({
-                    url: 'pegawaiAjax/' + id,
-                    type: 'DELETE',
-                });
-                $('#myTable').DataTable().ajax.reload();
-            }
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    let id = $(this).data('id');
+                    $.ajax({
+                        url: 'pegawaiAjax/' + id,
+                        type: 'DELETE',
+                    });
+                    $('#myTable').DataTable().ajax.reload();
+                    Swal.fire(
+                        'Deleted!',
+                        'Your file has been deleted.',
+                        'success'
+                    )
+                }
+            })
         });
 
 
@@ -124,12 +145,16 @@
 
         // Close Modal
     });
-    $('#exampleModal').on('hidden.bs.modal', function() {
+
+    function clearData() {
         $('#nama').val('');
         $('#email').val('');
         $('.alert-danger').addClass('d-none');
         $('.alert-danger').html('');
         $('.alert-success').addClass('d-none');
         $('.alert-success').html('');
+    }
+    $('#exampleModal').on('hidden.bs.modal', function() {
+        clearData();
     });
 </script>

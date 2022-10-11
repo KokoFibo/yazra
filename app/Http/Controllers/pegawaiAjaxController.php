@@ -32,14 +32,15 @@ class pegawaiAjaxController extends Controller
 
     public function store(Request $request)
     {
-        
+
         $validasi = Validator::make($request->all(), [
             'nama' => 'required',
-            'email' => 'required|email',
+            // 'email' => 'required|email',
+            'email' => 'required',
         ], [
             'nama.required' => 'Nama Wajib diisi',
             'email.required' => 'Email Wajib diisi',
-            'email.email' => 'Format Email harus benar',
+            // 'email.email' => 'Format Email harus benar',
         ]);
         if ($validasi->fails()) {
             return response()->json(['errors' => $validasi->errors()]);
@@ -77,11 +78,12 @@ class pegawaiAjaxController extends Controller
     {
         $validasi = Validator::make($request->all(), [
             'nama' => 'required',
-            'email' => 'required|email',
+            // 'email' => 'required|email',
+            'email' => 'required',
         ], [
             'nama.required' => 'Nama Wajib diisi',
             'email.required' => 'Email Wajib diisi',
-            'email.email' => 'Format Email harus benar',
+            // 'email.email' => 'Format Email harus benar',
         ]);
         if ($validasi->fails()) {
             return response()->json(['errors' => $validasi->errors()]);
